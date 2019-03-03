@@ -33,7 +33,14 @@ public class FixedIterationTrainer implements Trainer {
     public double train() {
         double sum = 0;
         for (int i = 0; i < iterations; i++) {
-            sum += trainer.train();
+            /* sum += trainer.train(); */
+        	double val = trainer.train();
+        	
+        	sum += val;
+        	/**
+        	System.out.print("Current value: " + val + " ");
+        	System.out.println("Current avg:   " + sum / (i+1));
+        	*/
         }
         return sum / iterations;
     }

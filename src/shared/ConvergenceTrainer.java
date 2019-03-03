@@ -7,9 +7,13 @@ package shared;
  */
 public class ConvergenceTrainer implements Trainer {
     /** The default threshold */
-    private static final double THRESHOLD = 1E-10;
-    /** The maxium number of iterations */
-    private static final int MAX_ITERATIONS = 500;
+    private static final double THRESHOLD = 0.5;
+    /** The maximum number of iterations */
+    private static final int MAX_ITERATIONS = 10000;
+    /** The mainimum number of iterations */
+    private static final int MIN_ITERATIONS = 5000;
+    /** The minimum number of unchanged iterations */
+    private static final int MIN_UNCHANGED_ITERATIONS = 10;
 
     /**
      * The trainer
@@ -30,6 +34,8 @@ public class ConvergenceTrainer implements Trainer {
      * The maximum number of iterations to use
      */
     private int maxIterations;
+    
+    private int minIterations;
 
     /**
      * Create a new convergence trainer
@@ -38,10 +44,11 @@ public class ConvergenceTrainer implements Trainer {
      * @param maxIterations the maximum iterations
      */
     public ConvergenceTrainer(Trainer trainer,
-            double threshold, int maxIterations) {
+            double threshold, int maxIterations, int minIterations) {
         this.trainer = trainer;
         this.threshold = threshold;
         this.maxIterations = maxIterations;
+        this.minIterations = minIterations;
     }
     
 
@@ -50,21 +57,32 @@ public class ConvergenceTrainer implements Trainer {
      * @param trainer the trainer to use
      */
     public ConvergenceTrainer(Trainer trainer) {
-        this(trainer, THRESHOLD, MAX_ITERATIONS);
+        this(trainer, THRESHOLD, MAX_ITERATIONS, MIN_ITERATIONS);
     }
 
     /**
      * @see Trainer#train()
      */
     public double train() {
+    	int countSmallChanges = 0;
         double lastError;
         double error = Double.MAX_VALUE;
         do {
            iterations++;
            lastError = error;
            error = trainer.train();
-        } while (Math.abs(error - lastError) > threshold
-             && iterations < maxIterations);
+           
+//           System.out.println("iteration " + iterations + ": " + error);
+           
+           if (Math.abs(lastError - error) < threshold) {
+        	   countSmallChanges++;
+           } else {
+        	   countSmallChanges = 0;
+           }
+        } while (Math.abs(lastError - error) > threshold
+             && iterations < maxIterations
+             || iterations < minIterations
+             || countSmallChanges < MIN_UNCHANGED_ITERATIONS);
         return error;
     }
     

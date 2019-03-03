@@ -142,6 +142,7 @@ public class DiscreteDependencyTree extends AbstractDistribution {
      */
     private double[][] calculateMutualInformation(DataSet observations) {
         DataSetDescription dsd = observations.getDescription();
+        
         // probs[i][j] is the probability that x_i = j
         double[][] probs = new double[observations.get(0).size()][];
         for (int i = 0; i < probs.length; i++) {
