@@ -24,14 +24,14 @@ public class NNComparison {
 	private static int INPUT_LAYER = 4;
 	private static int HIDDEN_LAYER = 5;
 	private static int OUTPUT_LAYER = 1;
-	private static int TRAINING_ITERATIONS = 200;
+	private static int TRAINING_ITERATIONS = 100;
 	private static Instance[] instances;
 	
 	private static void initialize_instances() throws FileNotFoundException {
 		
 		ArrayList<Instance> instances_arraylist = new ArrayList<Instance>();
 		
-		Scanner scanner = new Scanner(new File("data_banknote_authentication.csv"));
+		Scanner scanner = new Scanner(new File("project/data_banknote_authentication.csv"));
 		
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
@@ -59,7 +59,7 @@ public class NNComparison {
 	}
 	
 	private static void train(OptimizationAlgorithm oa, BackPropagationNetwork network, String oaName, Instance[] instances, AbstractErrorMeasure measure) {
-		System.out.println("Error results for " + oaName);
+		System.out.format("%n%nError results for %s%n", oaName);
 		System.out.println("___________________________");
 		
 		for (int iteration=0; iteration<TRAINING_ITERATIONS; iteration++) {
@@ -76,7 +76,7 @@ public class NNComparison {
 				error += measure.value(output, example);
 			}
 			
-			System.out.format("%.3f ", error);
+//			System.out.format("%.3f ", error);
 		}
 	}
 	
@@ -139,7 +139,7 @@ public class NNComparison {
 			endTime = System.currentTimeMillis();
 			testing_time = endTime - startTime;
 			
-			double percentage = correct/(correct + incorrect) * 100;
+			double percentage = correct * 100.0 /(correct + incorrect);
 			
 			System.out.format("%nResults for %s: %nCorrectly classified %d instances.",name, correct);
 			System.out.format("%nIncorrectly classified %d instances.%nPercent correctly classified: %.3f", incorrect, percentage);

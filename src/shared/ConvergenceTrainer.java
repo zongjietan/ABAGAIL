@@ -11,7 +11,7 @@ public class ConvergenceTrainer implements Trainer {
     /** The maximum number of iterations */
     private static final int MAX_ITERATIONS = 10000;
     /** The mainimum number of iterations */
-    private static final int MIN_ITERATIONS = 5000;
+    private static final int MIN_ITERATIONS = 1000;
     /** The minimum number of unchanged iterations */
     private static final int MIN_UNCHANGED_ITERATIONS = 10;
 
